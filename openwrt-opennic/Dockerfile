@@ -20,9 +20,9 @@ RUN	mkdir -p /var/lock/ && opkg update && \
 	/etc/init.d/firewall disable && \
 	mkdir -p /etc/crontabs && \
 	touch /etc/crontabs/root && \
-	cd / && \
 	ln -s /usr/bin/named-checkconf /usr/sbin && \
 	bash /srvzone && \
+	chmod 755 /srvzone && \
 	mkdir -p /tmp/bind/opennic/slave && \
 	chown -R bind:bind /tmp/bind/opennic && \
 	ln -s /tmp/bind/opennic /etc/bind
