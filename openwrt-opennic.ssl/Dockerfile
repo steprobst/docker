@@ -3,6 +3,7 @@ FROM scratch
 ENV HETZNER_Token="Hetzner-API-Token"
 ENV DNSRECORD="foo.bar.tld"
 ENV DNSEMAIL="foo@bar.tld"
+ENV DHPARAM="4096"
 
 #ADD https://downloads.openwrt.org/releases/22.03.3/targets/x86/64/openwrt-22.03.3-x86-64-rootfs.tar.gz /
 #ADD https://downloads.openwrt.org/releases/22.03.4/targets/armvirt/64/openwrt-22.03.4-armvirt-64-default-rootfs.tar.gz /
@@ -19,7 +20,7 @@ RUN	mkdir -p /var/lock/ && opkg update && \
 	/etc/init.d/dropbear disable && \
 	/etc/init.d/uhttpd disable && \
 	/etc/init.d/firewall disable && \
-	openssl dhparam -out /etc/bind/dhparam.pem 1024 && \
+	openssl dhparam -out /etc/bind/dhparam.pem $DHPARAM && \
 	mkdir -p /etc/crontabs && \
 	touch /etc/crontabs/root && \
 	cd /usr/lib/acme/ && \
@@ -36,6 +37,7 @@ RUN	mkdir -p /var/lock/ && opkg update && \
 	chmod 600 /root/.acme.sh/account.conf && \
 	chmod 644 /root/.acme.sh/$(echo $DNSRECORD)_ecc/$(echo $DNSRECORD).key && \
 	bash /srvzone && \
+	chmod 755 /srvzone && \
 	mkdir -p /tmp/bind/opennic/slave && \
 	chown -R bind:bind /tmp/bind/opennic && \
 	ln -s /tmp/bind/opennic /etc/bind
