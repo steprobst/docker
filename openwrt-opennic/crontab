@@ -1,0 +1,5 @@
+30 0 * * 1 cd / && wget -c http://161.97.219.84/opennic.oss/files/scripts/srvzone 
+30 0 * * 1 cd / && wget -c http://161.97.219.84/opennic.oss/files/scripts/srvzone.conf 
+1 0 * * * bash /root/srvzone && /usr/sbin/rndc reload
+51 0 * * *  "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" 
+50 0 * * 1  "/root/.acme.sh"/acme.sh --upgrade --home "/root/.acme.sh" 

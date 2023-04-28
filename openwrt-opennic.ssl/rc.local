@@ -1,0 +1,2 @@
+pgrep uhttpd && /etc/init.d/uhttpd disable
+pgrep uhttpd && /etc/init.d/uhttpd stop
