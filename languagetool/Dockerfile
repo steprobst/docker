@@ -1,4 +1,4 @@
-FROM alpine:3.17
+FROM ngram:0.1 
 
 #Path for Languagetool
 ENV LPATH="/languagetool"
@@ -11,19 +11,15 @@ ENV NGRAMS="de-20150819 en-20150817 es-20150915 fr-20150913 nl-20181229"
 #HTTP URL for Downloads
 ENV NGRAMSURL="https://languagetool.org/download"
 
-RUN apk update && \
-    apk upgrade --no-cache && \
-    apk add --no-cache openjdk$(echo $JVER)-jre-headless unzip wget && \
-    wget $NGRAMSURL/LanguageTool-$LVER.zip && \
+RUN wget $NGRAMSURL/LanguageTool-$LVER.zip && \
     unzip LanguageTool-$LVER.zip && \ 
     rm LanguageTool-$LVER.zip && \ 
-    mv /LanguageTool-$LVER $LPATH && \
-    mkdir -p $LPATH/ngrams && \
-    cd $LPATH/ngrams && \
-    for var in $NGRAMS; do wget $NGRAMSURL/ngram-data/ngrams-$var.zip; unzip ngrams-$var.zip; rm ngrams-$var.zip; done
+    mv /LanguageTool-$LVER/* $LPATH/ && \
+    rm -rf /LanguageTool-$LVER 
     
 WORKDIR $LPATH 
-USER nobody 
 EXPOSE 8081
+
+USER nobody 
 
 CMD ["java", "-cp", "languagetool-server.jar", "org.languagetool.server.HTTPServer", "--port", "8081", "--public", "--allow-origin", "'*'", "--languageModel", "ngrams" ]
